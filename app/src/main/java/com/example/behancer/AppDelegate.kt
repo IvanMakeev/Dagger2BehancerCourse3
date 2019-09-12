@@ -4,18 +4,26 @@ import android.app.Application
 import androidx.room.Room
 import com.example.behancer.data.Storage
 import com.example.behancer.data.database.BehanceDatabase
+import com.example.behancer.di.AppComponent
+import com.example.behancer.di.AppModule
+import com.example.behancer.di.DaggerAppComponent
+import com.example.behancer.di.NetworkModule
 
 class AppDelegate : Application() {
 
-    lateinit var storage: Storage
+    companion object {
+        private lateinit var appComponent: AppComponent
+
+        fun getAppComponent() = appComponent
+    }
 
     override fun onCreate() {
         super.onCreate()
-
-        val database = Room.databaseBuilder(this, BehanceDatabase::class.java, "behance_database")
-            .fallbackToDestructiveMigration()
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .networkModule(NetworkModule())
             .build()
-
-        storage = Storage(database.behanceDao)
     }
+
+
 }

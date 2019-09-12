@@ -22,43 +22,4 @@ object ApiUtils {
         SocketTimeoutException::class.java,
         ConnectException::class.java
     )
-
-    private var client: OkHttpClient? = null
-    private var retrofit: Retrofit? = null
-    private var gson: Gson? = null
-    private var api: BehanceApi? = null
-
-    private fun getClient(): OkHttpClient {
-        if (client == null) {
-            val builder = OkHttpClient().newBuilder()
-            builder.addInterceptor(ApiKeyInterceptor())
-            if (!BuildConfig.BUILD_TYPE.contains("release")) {
-                builder.addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            }
-            client = builder.build()
-        }
-        return client!!
-    }
-
-    private fun getRetrofit(): Retrofit {
-        if (gson == null) {
-            gson = Gson()
-        }
-        if (retrofit == null) {
-            retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.API_URL)
-                .client(getClient())
-                .addConverterFactory(GsonConverterFactory.create(gson!!))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-        }
-        return retrofit!!
-    }
-
-    fun getApiService(): BehanceApi {
-        if (api == null) {
-            api = getRetrofit().create<BehanceApi>(BehanceApi::class.java)
-        }
-        return api!!
-    }
 }

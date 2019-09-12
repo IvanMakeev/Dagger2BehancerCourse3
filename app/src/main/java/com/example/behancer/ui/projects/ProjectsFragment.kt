@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.behancer.AppDelegate
 import com.example.behancer.R
 import com.example.behancer.common.PresenterFragment
 import com.example.behancer.common.RefreshOwner
@@ -16,6 +17,7 @@ import com.example.behancer.data.Storage
 import com.example.behancer.data.model.project.Project
 import com.example.behancer.ui.profile.ProfileActivity
 import com.example.behancer.ui.profile.ProfileFragment
+import javax.inject.Inject
 
 class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, ProjectsView,
     ProjectsAdapter.OnItemClickListener {
@@ -28,20 +30,20 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorView: View
-    private lateinit var storage: Storage
     private lateinit var refreshOwner: RefreshOwner
     private lateinit var projectsAdapter: ProjectsAdapter
-    protected lateinit var _presenter: ProjectsPresenter
+    @Inject lateinit var _presenter: ProjectsPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is Storage.StorageOwner) {
-            storage = (context as Storage.StorageOwner).obtainStorage()
-        }
-
         if (context is RefreshOwner) {
             refreshOwner = context
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AppDelegate.getAppComponent().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,11 +62,10 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
 
         activity?.setTitle(R.string.projects)
 
+        _presenter.setView(this)
         projectsAdapter = ProjectsAdapter(this)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = projectsAdapter
-
-        _presenter = ProjectsPresenter(this, storage)
 
         onRefreshData()
     }

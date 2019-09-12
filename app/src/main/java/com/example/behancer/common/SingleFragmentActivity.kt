@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.behancer.AppDelegate
 import com.example.behancer.R
-import com.example.behancer.data.Storage
 
-abstract class SingleFragmentActivity : AppCompatActivity(), Storage.StorageOwner, SwipeRefreshLayout.OnRefreshListener,
+abstract class SingleFragmentActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
     RefreshOwner {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
@@ -25,10 +23,6 @@ abstract class SingleFragmentActivity : AppCompatActivity(), Storage.StorageOwne
             changeFragment(getFragment())
         }
 
-    }
-
-    override fun obtainStorage(): Storage {
-        return (applicationContext as AppDelegate).storage
     }
 
     private fun changeFragment(fragment: Fragment) {
@@ -53,7 +47,6 @@ abstract class SingleFragmentActivity : AppCompatActivity(), Storage.StorageOwne
             setRefreshState(false)
         }
     }
-
 
 
     override fun setRefreshState(refreshing: Boolean) {

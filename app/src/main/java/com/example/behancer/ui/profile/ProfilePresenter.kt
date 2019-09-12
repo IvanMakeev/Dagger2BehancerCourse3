@@ -1,51 +1,48 @@
-package com.example.behancer.ui.projects
+package com.example.behancer.ui.profile
 
-import com.example.behancer.BuildConfig
 import com.example.behancer.common.BasePresenter
 import com.example.behancer.data.Storage
 import com.example.behancer.data.api.BehanceApi
+import com.example.behancer.ui.projects.ProjectsView
 import com.example.behancer.utils.ApiUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ProjectsPresenter @Inject constructor() : BasePresenter() {
+class ProfilePresenter @Inject constructor() : BasePresenter() {
 
-    private lateinit var view: ProjectsView
+    private lateinit var view: ProfileView
     @Inject
     lateinit var storage: Storage
     @Inject
     lateinit var api: BehanceApi
 
-    fun setView(view: ProjectsView){
+    fun setView(view: ProfileView){
         this.view = view
     }
 
-    fun getProjects() {
-        compositeDisposable.add(api.getProjects(BuildConfig.API_QUERY)
-            .doOnSuccess { response -> storage.insertProjects(response) }
+    fun getProfile() {
+        compositeDisposable.add(
+            api.getUserInfo(view.getUsername())
+            .subscribeOn(Schedulers.io())
+            .doOnSuccess { response -> storage.insertUser(response) }
             .onErrorReturn { throwable ->
                 if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable::class.java))
-                    storage.getProjects()
+                    storage.getUser(view.getUsername())
                 else
                     null
             }
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { view.showRefresh() }
             .doFinally { view.hideRefresh() }
             .subscribe(
                 { response ->
-                    view.showProjects(response.projects)
+                    view.showProfile()
+                    view.bind(response.user)
                 },
                 {
-                    it.printStackTrace()
                     view.showError()
                 })
         )
-    }
-
-    fun openProfileFragment(username: String) {
-        view.openProfileFragment(username)
     }
 }

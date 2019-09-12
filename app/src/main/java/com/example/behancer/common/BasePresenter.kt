@@ -4,10 +4,10 @@ import io.reactivex.disposables.CompositeDisposable
 
 abstract class BasePresenter {
 
-    protected val mCompositeDisposable = CompositeDisposable()
+    protected val compositeDisposable = CompositeDisposable()
 
     fun disposeAll() {
-        mCompositeDisposable.dispose()
+        compositeDisposable.dispose()
     }
 }
 
