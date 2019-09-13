@@ -12,7 +12,6 @@ import com.example.behancer.R
 import com.example.behancer.common.PresenterFragment
 import com.example.behancer.common.RefreshOwner
 import com.example.behancer.common.Refreshable
-import com.example.behancer.data.Storage
 import com.example.behancer.data.model.user.User
 import com.example.behancer.utils.DateUtils
 import com.squareup.picasso.Picasso
@@ -21,24 +20,18 @@ import javax.inject.Inject
 class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refreshable {
 
     companion object {
-
         const val PROFILE_KEY = "PROFILE_KEY"
-
-        fun newInstance(args: Bundle): ProfileFragment {
-            val fragment = ProfileFragment()
-            fragment.arguments = args
-
-            return fragment
-        }
+        fun newInstance(args: Bundle) = ProfileFragment().apply { arguments = args }
     }
 
-    private var refreshOwner: RefreshOwner? = null
-    private lateinit var errorView: View
-    private lateinit var profileView: View
-    private lateinit var username: String
+    @Inject
+    lateinit var refreshOwner: RefreshOwner
     @Inject
     lateinit var _presenter: ProfilePresenter
 
+    private lateinit var errorView: View
+    private lateinit var profileView: View
+    private lateinit var username: String
     private lateinit var profileImage: ImageView
     private lateinit var profileName: TextView
     private lateinit var profileCreatedOn: TextView
@@ -46,13 +39,14 @@ class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refr
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        refreshOwner = if (context is RefreshOwner) context else null
+        AppDelegate.getInjector().plusViewComponent(this).inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppDelegate.getAppComponent().inject(this)
+        AppDelegate.getInjector().plusFragmentComponent()
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fr_profile, container, false)
     }
@@ -72,15 +66,10 @@ class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refr
         if (arguments != null) {
             username = arguments!!.getString(PROFILE_KEY)!!
         }
-
         activity?.let {
             it.title = username
         }
-
-        _presenter.setView(this)
-
         profileView.visibility = View.VISIBLE
-
         onRefreshData()
     }
 
@@ -99,8 +88,8 @@ class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refr
     }
 
     override fun onDetach() {
-        refreshOwner = null
         super.onDetach()
+        AppDelegate.getInjector().clearViewComponent()
     }
 
 
@@ -114,11 +103,11 @@ class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refr
     }
 
     override fun showRefresh() {
-        refreshOwner!!.setRefreshState(true)
+        refreshOwner.setRefreshState(true)
     }
 
     override fun hideRefresh() {
-        refreshOwner!!.setRefreshState(false)
+        refreshOwner.setRefreshState(false)
     }
 
     override fun showError() {

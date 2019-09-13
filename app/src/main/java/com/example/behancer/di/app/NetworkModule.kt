@@ -1,4 +1,4 @@
-package com.example.behancer.di
+package com.example.behancer.di.app
 
 import com.example.behancer.BuildConfig
 import com.example.behancer.data.api.ApiKeyInterceptor
@@ -18,9 +18,7 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGson(): Gson {
-        return Gson()
-    }
+    fun provideGson() = Gson()
 
     @Provides
     @Singleton
@@ -46,7 +44,5 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): BehanceApi {
-        return retrofit.create<BehanceApi>(BehanceApi::class.java)
-    }
+    fun provideApiService(retrofit: Retrofit): BehanceApi = retrofit.create<BehanceApi>(BehanceApi::class.java)
 }

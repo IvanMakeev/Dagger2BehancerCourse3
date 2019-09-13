@@ -17,7 +17,7 @@ class ProjectsPresenter @Inject constructor() : BasePresenter() {
     @Inject
     lateinit var api: BehanceApi
 
-    fun setView(view: ProjectsView){
+    fun setView(view: ProjectsView) {
         this.view = view
     }
 

@@ -38,7 +38,7 @@ class ProjectsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         mPublishedOn.text = DateUtils.format(item.publishedOn)
 
         if (onItemClickListener != null) {
-            itemView.setOnClickListener { v ->
+            itemView.setOnClickListener {
                 onItemClickListener.onItemClick(
                     item.owners!![FIRST_OWNER_INDEX].username
                 )

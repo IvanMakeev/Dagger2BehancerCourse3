@@ -1,4 +1,4 @@
-package com.example.behancer.di
+package com.example.behancer.di.app
 
 import androidx.room.Room
 import com.example.behancer.AppDelegate
@@ -13,9 +13,7 @@ class AppModule(private val appDelegate: AppDelegate) {
 
     @Provides
     @Singleton
-    fun provideApp(): AppDelegate {
-        return appDelegate
-    }
+    fun provideApp() = appDelegate
 
     @Provides
     @Singleton

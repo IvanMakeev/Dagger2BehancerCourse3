@@ -8,7 +8,7 @@ abstract class PresenterFragment<P : BasePresenter> : Fragment() {
     protected abstract fun getPresenter(): P
 
     override fun onDetach() {
-        getPresenter().disposeAll()
+//        getPresenter().disposeAll()
         super.onDetach()
     }
 }

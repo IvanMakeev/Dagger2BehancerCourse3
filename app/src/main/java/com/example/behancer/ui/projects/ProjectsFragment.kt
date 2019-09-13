@@ -13,7 +13,6 @@ import com.example.behancer.R
 import com.example.behancer.common.PresenterFragment
 import com.example.behancer.common.RefreshOwner
 import com.example.behancer.common.Refreshable
-import com.example.behancer.data.Storage
 import com.example.behancer.data.model.project.Project
 import com.example.behancer.ui.profile.ProfileActivity
 import com.example.behancer.ui.profile.ProfileFragment
@@ -32,7 +31,8 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
     private lateinit var errorView: View
     private lateinit var refreshOwner: RefreshOwner
     private lateinit var projectsAdapter: ProjectsAdapter
-    @Inject lateinit var _presenter: ProjectsPresenter
+    @Inject
+    lateinit var _presenter: ProjectsPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -43,7 +43,7 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppDelegate.getAppComponent().inject(this)
+        AppDelegate.getInjector().getAppComponent().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
