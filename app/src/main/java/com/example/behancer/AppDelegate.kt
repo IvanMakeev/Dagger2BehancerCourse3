@@ -58,5 +58,5 @@ class AppDelegate : Application() {
         viewComponent = null
     }
 
-    fun getInjectView() = viewComponent
+    fun getInjectorView() = viewComponent
 }

@@ -27,12 +27,14 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
         }
     }
 
+    @Inject
+    lateinit var _presenter: ProjectsPresenter
+
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorView: View
     private lateinit var refreshOwner: RefreshOwner
     private lateinit var projectsAdapter: ProjectsAdapter
-    @Inject
-    lateinit var _presenter: ProjectsPresenter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,6 +70,16 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
         recyclerView.adapter = projectsAdapter
 
         onRefreshData()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        AppDelegate.getInjector().clearFragmentComponent()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+
     }
 
     override fun getPresenter(): ProjectsPresenter {

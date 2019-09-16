@@ -1,5 +1,6 @@
 package com.example.behancer.ui.profile
 
+import android.util.Log
 import com.example.behancer.AppDelegate
 import com.example.behancer.common.BasePresenter
 import com.example.behancer.data.Storage
@@ -11,21 +12,15 @@ import javax.inject.Inject
 
 class ProfilePresenter(private val storage: Storage, private val api: BehanceApi) : BasePresenter() {
 
+    init {
+        Log.d("TAG", "presenter is created")
+    }
+
     @Inject
     lateinit var view: ProfileView
-//    @Inject
-//    lateinit var storage: Storage
-//    @Inject
-//    lateinit var api: BehanceApi
-
-//    fun setView(view: ProfileView) {
-//        this.view = view
-//    }
 
     fun getProfile() {
-        if (AppDelegate.getInjector().getInjectView() != null) {
-            AppDelegate.getInjector().getInjectView()!!.inject(this)
-        }
+        injectViewInstance()
         compositeDisposable.add(
             api.getUserInfo(view.getUsername())
                 .subscribeOn(Schedulers.io())
@@ -49,4 +44,6 @@ class ProfilePresenter(private val storage: Storage, private val api: BehanceApi
                     })
         )
     }
+
+    private fun injectViewInstance() = AppDelegate.getInjector().getInjectorView()?.inject(this)
 }

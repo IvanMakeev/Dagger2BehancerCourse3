@@ -11,14 +11,14 @@ import dagger.Provides
 class ViewModule(private val fragment: PresenterFragment<*>) {
 
     @Provides
-    @View
+    @ViewScope
     fun provideRefreshOwner() = fragment.activity as RefreshOwner
 
     @Provides
-    @View
+    @ViewScope
     fun provideProjectsView() = fragment as ProjectsView
 
     @Provides
-    @View
+    @ViewScope
     fun provideProfileView() = fragment as ProfileView
 }

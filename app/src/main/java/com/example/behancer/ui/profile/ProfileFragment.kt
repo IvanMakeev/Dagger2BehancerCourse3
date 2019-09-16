@@ -63,9 +63,7 @@ class ProfileFragment : PresenterFragment<ProfilePresenter>(), ProfileView, Refr
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (arguments != null) {
-            username = arguments!!.getString(PROFILE_KEY)!!
-        }
+        username = arguments?.getString(PROFILE_KEY)!!
         activity?.let {
             it.title = username
         }

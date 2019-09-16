@@ -5,7 +5,7 @@ import com.example.behancer.ui.profile.ProfilePresenter
 import com.example.behancer.ui.projects.ProjectsFragment
 import dagger.Subcomponent
 
-@View
+@ViewScope
 @Subcomponent(modules = [ViewModule::class])
 interface ViewComponent {
     fun inject(injector: ProjectsFragment)
