@@ -1,7 +1,6 @@
 package com.example.behancer.ui.profile
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.behancer.AppDelegate
 import com.example.behancer.common.BasePresenter
 import com.example.behancer.data.Storage
 import com.example.behancer.data.api.BehanceApi
@@ -11,16 +10,11 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
-class ProfilePresenter : BasePresenter<ProfileView>() {
-
-    init {
-        AppDelegate.getInjector().getAppComponent().inject(this)
-    }
-
-    @Inject
-    lateinit var storage: Storage
-    @Inject
-    lateinit var api: BehanceApi
+class ProfilePresenter @Inject constructor(
+    private val storage: Storage,
+    private val api: BehanceApi
+) :
+    BasePresenter<ProfileView>() {
 
     fun getProfile(username: String) {
         compositeDisposable.add(

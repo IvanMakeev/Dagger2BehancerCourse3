@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.behancer.AppDelegate
 import com.example.behancer.R
 import com.example.behancer.common.PresenterFragment
 import com.example.behancer.common.RefreshOwner
@@ -16,6 +17,7 @@ import com.example.behancer.common.Refreshable
 import com.example.behancer.data.model.user.User
 import com.example.behancer.utils.DateUtils
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
 
@@ -24,6 +26,7 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
         fun newInstance(args: Bundle) = ProfileFragment().apply { arguments = args }
     }
 
+    @Inject
     @InjectPresenter
     lateinit var _presenter: ProfilePresenter
 
@@ -91,7 +94,10 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
     }
 
     @ProvidePresenter
-    fun providePresenter() = ProfilePresenter()
+    fun providePresenter():ProfilePresenter{
+        AppDelegate.getInjector().plusFragmentComponent().inject(this)
+        return  _presenter
+    }
 
     override fun showProfile() {
         errorView.visibility = View.GONE

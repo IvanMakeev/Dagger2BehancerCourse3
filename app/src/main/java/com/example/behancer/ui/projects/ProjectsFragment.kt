@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.behancer.AppDelegate
 import com.example.behancer.R
 import com.example.behancer.common.PresenterFragment
 import com.example.behancer.common.RefreshOwner
@@ -17,6 +18,7 @@ import com.example.behancer.common.Refreshable
 import com.example.behancer.data.model.project.Project
 import com.example.behancer.ui.profile.ProfileActivity
 import com.example.behancer.ui.profile.ProfileFragment
+import javax.inject.Inject
 
 class ProjectsFragment : PresenterFragment(), Refreshable, ProjectsView,
     ProjectsAdapter.OnItemClickListener {
@@ -27,6 +29,7 @@ class ProjectsFragment : PresenterFragment(), Refreshable, ProjectsView,
         }
     }
 
+    @Inject
     @InjectPresenter
     lateinit var _presenter: ProjectsPresenter
 
@@ -44,7 +47,6 @@ class ProjectsFragment : PresenterFragment(), Refreshable, ProjectsView,
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fr_projects, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,7 +71,10 @@ class ProjectsFragment : PresenterFragment(), Refreshable, ProjectsView,
     }
 
     @ProvidePresenter
-    fun providePresenter() = ProjectsPresenter()
+    fun providePresenter():ProjectsPresenter{
+        AppDelegate.getInjector().plusFragmentComponent().inject(this)
+        return _presenter
+    }
 
     override fun onRefreshData() {
         _presenter.getProjects()

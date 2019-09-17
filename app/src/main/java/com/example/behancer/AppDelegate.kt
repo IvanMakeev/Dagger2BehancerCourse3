@@ -1,10 +1,7 @@
 package com.example.behancer
 
 import android.app.Application
-import com.example.behancer.di.AppComponent
-import com.example.behancer.di.AppModule
-import com.example.behancer.di.DaggerAppComponent
-import com.example.behancer.di.NetworkModule
+import com.example.behancer.di.*
 
 class AppDelegate : Application() {
 
@@ -15,6 +12,7 @@ class AppDelegate : Application() {
     }
 
     private lateinit var appComponent: AppComponent
+    private var fragmentComponent: FragmentComponent? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -26,4 +24,12 @@ class AppDelegate : Application() {
     }
 
     fun getAppComponent() = appComponent
+
+    fun plusFragmentComponent():FragmentComponent{
+        return appComponent.plusFragmentComponent()
+    }
+
+    fun cleanFragmentComponent(){
+        fragmentComponent = null
+    }
 }

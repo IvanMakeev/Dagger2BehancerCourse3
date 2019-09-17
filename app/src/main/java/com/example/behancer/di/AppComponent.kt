@@ -10,4 +10,6 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(injector: ProjectsPresenter)
     fun inject(injector: ProfilePresenter)
+    fun plusFragmentComponent(): FragmentComponent
+
 }

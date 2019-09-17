@@ -1,7 +1,6 @@
 package com.example.behancer.ui.projects
 
 import com.arellomobile.mvp.InjectViewState
-import com.example.behancer.AppDelegate
 import com.example.behancer.BuildConfig
 import com.example.behancer.common.BasePresenter
 import com.example.behancer.data.Storage
@@ -12,16 +11,10 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
-class ProjectsPresenter : BasePresenter<ProjectsView>() {
-
-    init {
-        AppDelegate.getInjector().getAppComponent().inject(this)
-    }
-
-    @Inject
-    lateinit var storage: Storage
-    @Inject
-    lateinit var api: BehanceApi
+class ProjectsPresenter @Inject constructor(
+    private val storage: Storage,
+    private val api: BehanceApi
+) : BasePresenter<ProjectsView>() {
 
     fun getProjects() {
         compositeDisposable.add(api.getProjects(BuildConfig.API_QUERY)

@@ -1,9 +1,12 @@
 package com.example.behancer.common
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.behancer.AppDelegate
 import com.example.behancer.R
 
 abstract class SingleFragmentActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener,
@@ -51,5 +54,10 @@ abstract class SingleFragmentActivity : AppCompatActivity(), SwipeRefreshLayout.
 
     override fun setRefreshState(refreshing: Boolean) {
         swipeRefreshLayout.post { swipeRefreshLayout.isRefreshing = refreshing }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+            AppDelegate.getInjector().cleanFragmentComponent()
     }
 }
