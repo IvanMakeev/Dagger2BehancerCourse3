@@ -8,7 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.behancer.AppDelegate
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.behancer.R
 import com.example.behancer.common.PresenterFragment
 import com.example.behancer.common.RefreshOwner
@@ -16,9 +17,8 @@ import com.example.behancer.common.Refreshable
 import com.example.behancer.data.model.project.Project
 import com.example.behancer.ui.profile.ProfileActivity
 import com.example.behancer.ui.profile.ProfileFragment
-import javax.inject.Inject
 
-class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, ProjectsView,
+class ProjectsFragment : PresenterFragment(), Refreshable, ProjectsView,
     ProjectsAdapter.OnItemClickListener {
 
     companion object {
@@ -27,9 +27,8 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
         }
     }
 
-    @Inject
+    @InjectPresenter
     lateinit var _presenter: ProjectsPresenter
-
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var errorView: View
@@ -41,11 +40,6 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
         if (context is RefreshOwner) {
             refreshOwner = context
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        AppDelegate.getInjector().getAppComponent().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,8 +57,6 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
         super.onActivityCreated(savedInstanceState)
 
         activity?.setTitle(R.string.projects)
-
-        _presenter.setView(this)
         projectsAdapter = ProjectsAdapter(this)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = projectsAdapter
@@ -72,19 +64,12 @@ class ProjectsFragment : PresenterFragment<ProjectsPresenter>(), Refreshable, Pr
         onRefreshData()
     }
 
-    override fun onStart() {
-        super.onStart()
-        AppDelegate.getInjector().clearFragmentComponent()
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-
-    }
-
     override fun getPresenter(): ProjectsPresenter {
         return _presenter
     }
+
+    @ProvidePresenter
+    fun providePresenter() = ProjectsPresenter()
 
     override fun onRefreshData() {
         _presenter.getProjects()

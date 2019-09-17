@@ -1,4 +1,4 @@
-package com.example.behancer.di.app
+package com.example.behancer.di
 
 import com.example.behancer.BuildConfig
 import com.example.behancer.data.api.ApiKeyInterceptor

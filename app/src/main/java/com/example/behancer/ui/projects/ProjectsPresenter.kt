@@ -1,5 +1,7 @@
 package com.example.behancer.ui.projects
 
+import com.arellomobile.mvp.InjectViewState
+import com.example.behancer.AppDelegate
 import com.example.behancer.BuildConfig
 import com.example.behancer.common.BasePresenter
 import com.example.behancer.data.Storage
@@ -9,17 +11,17 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ProjectsPresenter @Inject constructor() : BasePresenter() {
+@InjectViewState
+class ProjectsPresenter : BasePresenter<ProjectsView>() {
 
-    private lateinit var view: ProjectsView
+    init {
+        AppDelegate.getInjector().getAppComponent().inject(this)
+    }
+
     @Inject
     lateinit var storage: Storage
     @Inject
     lateinit var api: BehanceApi
-
-    fun setView(view: ProjectsView) {
-        this.view = view
-    }
 
     fun getProjects() {
         compositeDisposable.add(api.getProjects(BuildConfig.API_QUERY)
@@ -32,20 +34,20 @@ class ProjectsPresenter @Inject constructor() : BasePresenter() {
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { view.showRefresh() }
-            .doFinally { view.hideRefresh() }
+            .doOnSubscribe { viewState.showRefresh() }
+            .doFinally { viewState.hideRefresh() }
             .subscribe(
                 { response ->
-                    view.showProjects(response.projects)
+                    viewState.showProjects(response.projects)
                 },
                 {
                     it.printStackTrace()
-                    view.showError()
+                    viewState.showError()
                 })
         )
     }
 
     fun openProfileFragment(username: String) {
-        view.openProfileFragment(username)
+        viewState.openProfileFragment(username)
     }
 }

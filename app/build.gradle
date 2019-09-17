@@ -64,4 +64,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$dagger2_version"
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    def moxy_version = "1.7.0"
+    implementation "tech.schoolhelper:moxy-x:$moxy_version"
+    implementation "tech.schoolhelper:moxy-x-androidx:$moxy_version"
+    kapt "tech.schoolhelper:moxy-x-compiler:$moxy_version"
 }

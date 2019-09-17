@@ -1,7 +1,9 @@
 package com.example.behancer.common
 
+import com.arellomobile.mvp.MvpView
 
-interface BaseView{
+
+interface BaseView : MvpView {
 
     fun showRefresh()
 

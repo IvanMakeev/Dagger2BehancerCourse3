@@ -1,4 +1,4 @@
-package com.example.behancer.di.app
+package com.example.behancer.di
 
 import androidx.room.Room
 import com.example.behancer.AppDelegate

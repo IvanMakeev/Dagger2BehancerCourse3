@@ -1,6 +1,6 @@
 package com.example.behancer.ui.profile
 
-import android.util.Log
+import com.arellomobile.mvp.InjectViewState
 import com.example.behancer.AppDelegate
 import com.example.behancer.common.BasePresenter
 import com.example.behancer.data.Storage
@@ -10,40 +10,40 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ProfilePresenter(private val storage: Storage, private val api: BehanceApi) : BasePresenter() {
+@InjectViewState
+class ProfilePresenter : BasePresenter<ProfileView>() {
 
     init {
-        Log.d("TAG", "presenter is created")
+        AppDelegate.getInjector().getAppComponent().inject(this)
     }
 
     @Inject
-    lateinit var view: ProfileView
+    lateinit var storage: Storage
+    @Inject
+    lateinit var api: BehanceApi
 
-    fun getProfile() {
-        injectViewInstance()
+    fun getProfile(username: String) {
         compositeDisposable.add(
-            api.getUserInfo(view.getUsername())
+            api.getUserInfo(username)
                 .subscribeOn(Schedulers.io())
                 .doOnSuccess { response -> storage.insertUser(response) }
                 .onErrorReturn { throwable ->
                     if (ApiUtils.NETWORK_EXCEPTIONS.contains(throwable::class.java))
-                        storage.getUser(view.getUsername())
+                        storage.getUser(username)
                     else
                         null
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view.showRefresh() }
-                .doFinally { view.hideRefresh() }
+                .doOnSubscribe { viewState.showRefresh() }
+                .doFinally { viewState.hideRefresh() }
                 .subscribe(
                     { response ->
-                        view.showProfile()
-                        view.bind(response.user)
+                        viewState.showProfile()
+                        viewState.bind(response.user)
                     },
                     {
-                        view.showError()
+                        viewState.showError()
                     })
         )
     }
-
-    private fun injectViewInstance() = AppDelegate.getInjector().getInjectorView()?.inject(this)
 }
