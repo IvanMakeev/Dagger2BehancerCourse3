@@ -1,32 +1,16 @@
 package com.example.behancer.di
 
-import androidx.room.Room
 import com.example.behancer.AppDelegate
 import com.example.behancer.data.Storage
-import com.example.behancer.data.database.BehanceDatabase
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import com.example.behancer.di.provider.StorageProvider
+import toothpick.config.Module
+import javax.inject.Inject
 
-@Module
-class AppModule(private val appDelegate: AppDelegate) {
 
-    @Provides
-    @Singleton
-    fun provideApp() = appDelegate
+class AppModule @Inject constructor(appDelegate: AppDelegate) : Module() {
 
-    @Provides
-    @Singleton
-    fun provideStorage(): Storage {
-        val database = Room.databaseBuilder(
-            appDelegate,
-            BehanceDatabase::class.java,
-            "behance_database"
-        )
-            .fallbackToDestructiveMigration()
-            .build()
-
-        return Storage(database.behanceDao)
-
+    init {
+        bind(AppDelegate::class.java).toInstance(appDelegate)
+        bind(Storage::class.java).toProvider(StorageProvider::class.java).singleton()
     }
 }

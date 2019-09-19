@@ -17,6 +17,7 @@ import com.example.behancer.common.Refreshable
 import com.example.behancer.data.model.user.User
 import com.example.behancer.utils.DateUtils
 import com.squareup.picasso.Picasso
+import toothpick.Toothpick
 import javax.inject.Inject
 
 class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
@@ -95,7 +96,8 @@ class ProfileFragment : PresenterFragment(), ProfileView, Refreshable {
 
     @ProvidePresenter
     fun providePresenter():ProfilePresenter{
-        AppDelegate.getInjector().plusFragmentComponent().inject(this)
+        Toothpick.inject(this, AppDelegate.getAppScope())
+
         return  _presenter
     }
 

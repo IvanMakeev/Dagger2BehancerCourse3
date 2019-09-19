@@ -55,9 +55,4 @@ abstract class SingleFragmentActivity : AppCompatActivity(), SwipeRefreshLayout.
     override fun setRefreshState(refreshing: Boolean) {
         swipeRefreshLayout.post { swipeRefreshLayout.isRefreshing = refreshing }
     }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-            AppDelegate.getInjector().cleanFragmentComponent()
-    }
 }

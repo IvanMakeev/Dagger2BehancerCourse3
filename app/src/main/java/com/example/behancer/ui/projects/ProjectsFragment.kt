@@ -18,6 +18,7 @@ import com.example.behancer.common.Refreshable
 import com.example.behancer.data.model.project.Project
 import com.example.behancer.ui.profile.ProfileActivity
 import com.example.behancer.ui.profile.ProfileFragment
+import toothpick.Toothpick
 import javax.inject.Inject
 
 class ProjectsFragment : PresenterFragment(), Refreshable, ProjectsView,
@@ -72,7 +73,7 @@ class ProjectsFragment : PresenterFragment(), Refreshable, ProjectsView,
 
     @ProvidePresenter
     fun providePresenter():ProjectsPresenter{
-        AppDelegate.getInjector().plusFragmentComponent().inject(this)
+        Toothpick.inject(this, AppDelegate.getAppScope())
         return _presenter
     }
 

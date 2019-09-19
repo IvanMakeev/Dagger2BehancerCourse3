@@ -2,34 +2,22 @@ package com.example.behancer
 
 import android.app.Application
 import com.example.behancer.di.*
+import toothpick.MemberInjector
+import toothpick.Scope
+import toothpick.Toothpick
+import toothpick.configuration.Configuration
 
 class AppDelegate : Application() {
 
     companion object {
-        private lateinit var INSTANCE: AppDelegate
+        private lateinit var appScope: Scope
         @JvmStatic
-        fun getInjector(): AppDelegate = INSTANCE
+        fun getAppScope() = appScope
     }
-
-    private lateinit var appComponent: AppComponent
-    private var fragmentComponent: FragmentComponent? = null
 
     override fun onCreate() {
         super.onCreate()
-        INSTANCE = this
-        appComponent = DaggerAppComponent.builder()
-            .appModule(AppModule(this))
-            .networkModule(NetworkModule())
-            .build()
-    }
-
-    fun getAppComponent() = appComponent
-
-    fun plusFragmentComponent():FragmentComponent{
-        return appComponent.plusFragmentComponent()
-    }
-
-    fun cleanFragmentComponent(){
-        fragmentComponent = null
+        appScope = Toothpick.openScope(AppDelegate::class.java)
+        appScope.installModules(AppModule(this), NetworkModule())
     }
 }
